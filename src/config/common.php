@@ -3,7 +3,7 @@ return [
     'components' => [
         'shop' => [
             'deliveryHandlers'             => [
-                \skeeks\cms\shop\boxberry\BoxberryDeliveryHandler::class
+                \skeeks\cms\shop\pickpoint\PickpointDeliveryHandler::class
             ]
         ],
     ],

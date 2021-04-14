@@ -55,7 +55,7 @@ class PickpointDeliveryHandler extends DeliveryHandler
         return ArrayHelper::merge(parent::rules(), [
             [['ikn'], 'integer'],
 
-            [['api_key'], 'required'],
+            /*[['api_key'], 'required'],
             [['custom_city'], 'string'],
             [['api_key'], 'string'],
 
@@ -63,7 +63,7 @@ class PickpointDeliveryHandler extends DeliveryHandler
 
             [['height'], 'integer'],
             [['width'], 'integer'],
-            [['depth'], 'integer'],
+            [['depth'], 'integer'],*/
         ]);
     }
 
@@ -141,17 +141,32 @@ class PickpointDeliveryHandler extends DeliveryHandler
      */
     public function renderCheckoutForm(ActiveForm $activeForm, ShopOrder $shopOrder)
     {
-        \Yii::$app->view->registerJsFile("//pickpoint.ru/select/postamat.js");
+        //\Yii::$app->view->registerJsFile("//pickpoint.ru/select/postamat.js");
 
-        $apiKey = $this->api_key;
+        /*$apiKey = $this->api_key;
         $custom_city = $this->custom_city;
 
         $weight = $shopOrder->weight ? $shopOrder->weight : 1000;
-        $money = (float)$shopOrder->money->amount;
+        $money = (float)$shopOrder->money->amount;*/
 
         \Yii::$app->view->registerJs(<<<JS
+if (!$("#sx-postamat-js").length) {
+    var script = document.createElement('script');
+    script.src = "//pickpoint.ru/select/postamat.js";
+    script.id = "sx-postamat-js";
+    document.head.append(script);
+    
+    /*script.onload = function() {
+      // в скрипте создаётся вспомогательная функция с именем "_"
+      alert("pickpoint"); // функция доступна
+    };*/
+}
+
+
+
 
 $("#sx-pickpoint-open").on("click", function() {
+    console.log("sx-pickpoint-open");
     PickPoint.open(callback_function);
     return false;
 });
@@ -161,9 +176,9 @@ function callback_function(result){
     console.log(result);
     
     
-    /*var data = JSON.stringify(result);
-    $("#shoporder-delivery_handler_data_jsoned").empty().append(data).change();*/
-    /*if (result.prepaid=='1') {
+    var data = JSON.stringify(result);
+    $("#shoporder-delivery_handler_data_jsoned").empty().append(data).change();
+    /*if (result.prepaid == '1') {
         alert('Отделение работает только по предоплате!');
     }*/
 }
@@ -174,12 +189,11 @@ JS
         $result .= $activeForm->field($shopOrder->deliveryHandlerCheckoutModel, "id");
         $result .= '</div>';
 
-        if ($shopOrder->deliveryHandlerCheckoutModel->id) {
+        if ($shopOrder->deliveryHandlerCheckoutModel && $shopOrder->deliveryHandlerCheckoutModel instanceof PickpointCheckoutModel && $shopOrder->deliveryHandlerCheckoutModel->id) {
             $result .= <<<HTML
             <div>Адрес: {$shopOrder->deliveryHandlerCheckoutModel->address}</div>
-            <div>Телефон: {$shopOrder->deliveryHandlerCheckoutModel->phone}</div>
-            <div>Время работы: {$shopOrder->deliveryHandlerCheckoutModel->workschedule}</div>
-            <a href="#" class="sx-dashed" id="sx-boxberry-open">Изменить пункт выдачи Pickpoint</a>
+            <div>{$shopOrder->deliveryHandlerCheckoutModel->name}</div>
+            <a href="#" class="sx-dashed" id="sx-pickpoint-open">Изменить пункт выдачи Pickpoint</a>
 HTML;
         } else {
             $result .= <<<HTML
