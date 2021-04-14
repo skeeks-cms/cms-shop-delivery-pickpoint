@@ -1,1 +1,1 @@
-# cms-shop-delivery-pickpoint
+# cms-shop-delivery-boxberry
