@@ -167,7 +167,7 @@ if (!$("#sx-postamat-js").length) {
 
 $("#sx-pickpoint-open").on("click", function() {
     console.log("sx-pickpoint-open");
-    PickPoint.open(callback_function);
+    PickPoint.open(callback_function, {ikn: '{$this->ikn}'});
     return false;
 });
 
