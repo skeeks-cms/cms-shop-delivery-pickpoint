@@ -3,7 +3,10 @@ return [
     'components' => [
         'shop' => [
             'deliveryHandlers'             => [
-                \skeeks\cms\shop\pickpoint\PickpointDeliveryHandler::class
+                'pickpoint' => [
+                    'class' => \skeeks\cms\shop\pickpoint\PickpointDeliveryHandler::class
+                ]
+
             ]
         ],
     ],
